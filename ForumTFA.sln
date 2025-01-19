@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forum.API", "Forum.API\Forum.API.csproj", "{07151867-BD89-4601-977F-FDF8312F0A03}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forum.Storage", "Forum.Storage\Forum.Storage.csproj", "{3A3C8B19-7E13-4ED7-82D0-AD0E6C10BF97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{07151867-BD89-4601-977F-FDF8312F0A03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07151867-BD89-4601-977F-FDF8312F0A03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07151867-BD89-4601-977F-FDF8312F0A03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A3C8B19-7E13-4ED7-82D0-AD0E6C10BF97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A3C8B19-7E13-4ED7-82D0-AD0E6C10BF97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A3C8B19-7E13-4ED7-82D0-AD0E6C10BF97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A3C8B19-7E13-4ED7-82D0-AD0E6C10BF97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
