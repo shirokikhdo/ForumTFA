@@ -20,7 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Forum.Storage\Forum.Storage.csproj" />
+    <ProjectReference Include="..\Forums.Domain\Forums.Domain.csproj" />
+    <ProjectReference Include="..\Forums.Storage\Forums.Storage.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Forum.Storage.Migrations
+namespace Forums.Storage.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

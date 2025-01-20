@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Forum.Storage;
+namespace Forums.Storage;
 
 public class ForumDbContext : DbContext
 {
     public DbSet<User> Users { get; set; }
+
     public DbSet<Forum> Forums { get; set; }
+
     public DbSet<Topic> Topics { get; set; }
+
     public DbSet<Comment> Comments { get; set; }
 
     public ForumDbContext(DbContextOptions<ForumDbContext> options) 
