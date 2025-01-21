@@ -3,5 +3,5 @@
 public class MomentProvider : IMomentProvider
 {
     public DateTimeOffset Now 
-        => DateTimeOffset.Now;
+        => DateTimeOffset.UtcNow;
 }

@@ -11,4 +11,12 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Storages\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Forums.Domain\Forums.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
