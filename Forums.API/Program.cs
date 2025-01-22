@@ -1,3 +1,5 @@
+using FluentValidation;
+using Forums.API.Middlewares;
 using Forums.Domain.Authentication;
 using Forums.Domain.Authorization;
 using Forums.Domain.Models;
@@ -6,6 +8,7 @@ using Forums.Domain.UseCases.GetForums;
 using Forums.Storage;
 using Forums.Storage.Storages;
 using Microsoft.EntityFrameworkCore;
+using Forum = Forums.Domain.Models.Forum;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +25,7 @@ builder.Services.AddScoped<IIntentionManager, IntentionManager>();
 builder.Services.AddScoped<IIdentityProvider, IdentityProvider>();
 builder.Services.AddScoped<IGuidFactory, GuidFactory>();
 builder.Services.AddScoped<IMomentProvider, MomentProvider>();
+builder.Services.AddValidatorsFromAssemblyContaining<Forum>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -32,4 +36,5 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseAuthorization();
 app.MapControllers();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.Run();

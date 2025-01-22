@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Moq;
 using Moq.Language.Flow;
 using Forums.Domain.Authentication;
@@ -40,7 +42,12 @@ public class CreateTopicUseCaseShould
         _intentionIsAllowedSetup = _intentionManager.Setup(m => 
             m.IsAllowed(It.IsAny<TopicIntention>()));
 
-        _sut = new CreateTopicUseCase(_intentionManager.Object, identityProvider.Object, _storage.Object);
+        var validator = new Mock<IValidator<CreateTopicCommand>>();
+        validator.Setup(v => 
+                v.ValidateAsync(It.IsAny<CreateTopicCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult());
+        
+        _sut = new CreateTopicUseCase(validator.Object, _intentionManager.Object, identityProvider.Object, _storage.Object);
     }
 
     [Fact]
@@ -49,8 +56,10 @@ public class CreateTopicUseCaseShould
         var forumId = Guid.Parse("3BB52FCF-FA8F-4DA3-9954-25A67F75B71A");
 
         _intentionIsAllowedSetup.Returns(false);
-        
-        await _sut.Invoking(s => s.Execute(forumId, "Whatever", CancellationToken.None))
+
+        var command = new CreateTopicCommand(forumId, "Whatever");
+
+        await _sut.Invoking(s => s.Execute(command, CancellationToken.None))
             .Should().ThrowAsync<IntentionManagerException>();
         
         _intentionManager.Verify(m => 
@@ -64,8 +73,10 @@ public class CreateTopicUseCaseShould
         
         _intentionIsAllowedSetup.Returns(true);
         _forumExistsSetup.ReturnsAsync(false);
-        
-        await _sut.Invoking(s => s.Execute(forumId, "Some title", CancellationToken.None))
+
+        var command = new CreateTopicCommand(forumId, "Some title");
+
+        await _sut.Invoking(s => s.Execute(command, CancellationToken.None))
             .Should().ThrowAsync<ForumNotFoundException>();
         
         _storage.Verify(s => 
@@ -85,7 +96,9 @@ public class CreateTopicUseCaseShould
         var expected = new Topic();
         _createTopicSetup.ReturnsAsync(expected);
 
-        var actual = await _sut.Execute(forumId, "Hello world", CancellationToken.None);
+        var command = new CreateTopicCommand(forumId, "Hello world");
+
+        var actual = await _sut.Execute(command, CancellationToken.None);
         actual.Should().Be(expected);
 
         _storage.Verify(s => 
