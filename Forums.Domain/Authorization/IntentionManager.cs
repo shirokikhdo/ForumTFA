@@ -2,7 +2,7 @@
 
 namespace Forums.Domain.Authorization;
 
-public class IntentionManager : IIntentionManager
+internal class IntentionManager : IIntentionManager
 {
     private readonly IEnumerable<IIntentionResolver> _resolvers;
     private readonly IIdentityProvider _identityProvider;

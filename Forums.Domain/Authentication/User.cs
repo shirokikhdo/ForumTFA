@@ -1,6 +1,6 @@
 ﻿namespace Forums.Domain.Authentication;
 
-public class User : IIdentity
+internal class User : IIdentity
 {
     public Guid UserId { get; }
 

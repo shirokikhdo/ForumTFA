@@ -1,0 +1,42 @@
+version: '3.9'
+
+networks:
+  default:
+    name: 'forums-tfa'
+
+volumes:
+  forums-tfa-pg:
+  forums-tfa-logs:
+
+services: 
+  postgres:
+    container_name: 'forums-tfa-pg'
+    image: 'postgres:latest'
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: '12345678'
+    volumes:
+      - forums-tfa-pg:/var/lib/postgresql/data
+  opensearch:
+    container_name: 'forums-tfa-os'
+    image: 'opensearchproject/opensearch:2'
+    ports:
+      - '9200:9200'
+      - '9600:9600'
+    environment:
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: 'forums-TFA-12345678'
+      discovery.type: 'single-node'
+      plugins.security.disabled: 'true'
+    volumes:
+      - forums-tfa-logs:/usr/share/opensearch/data
+  opensearch-dashboards:
+    container_name: 'forums-tfa-osd'
+    image: 'opensearchproject/opensearch-dashboards:latest'
+    ports:
+      - '5601:5601'
+    environment:
+      OPENSEARCH_HOSTS: '["http://forums-tfa-os:9200"]'
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: 'true'
+    depends_on:
+      - opensearch

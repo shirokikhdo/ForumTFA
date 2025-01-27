@@ -1,10 +1,10 @@
-﻿using Forums.Domain.Models;
-using Forums.Domain.UseCases.CreateTopic;
+﻿using Forums.Domain.UseCases.CreateTopic;
+using Forums.Storage.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forums.Storage.Storages;
 
-public class CreateTopicStorage : ICreateTopicStorage
+internal class CreateTopicStorage : ICreateTopicStorage
 {
     private readonly IGuidFactory _guidFactory;
     private readonly IMomentProvider _momentProvider;

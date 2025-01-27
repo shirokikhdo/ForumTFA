@@ -9,7 +9,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forums.Storage", "Forums.St
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forums.Domain", "Forums.Domain\Forums.Domain.csproj", "{7344C51F-7C6F-4827-BC22-826151A3471A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forums.Domain.Tests", "Forums.Domain.Tests\Forums.Domain.Tests.csproj", "{D9C874D3-B426-48EF-8B0A-6E4E70D0FAB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forums.Domain.Tests", "Forums.Domain.Tests\Forums.Domain.Tests.csproj", "{D9C874D3-B426-48EF-8B0A-6E4E70D0FAB5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forums.Domain.DependencyInjection", "Forums.Domain.DependencyInjection\Forums.Domain.DependencyInjection.csproj", "{4880E99E-E15E-43AB-B883-F172C3E0638B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forums.Storage.DependencyInjection", "Forums.Storage.DependencyInjection\Forums.Storage.DependencyInjection.csproj", "{AF4411FD-373A-4FBA-81AC-E9626D6854E0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{7F996468-49F0-4C2C-AB12-375AF6EF0D99}"
+	ProjectSection(SolutionItems) = preProject
+		directory.build.props = directory.build.props
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +43,14 @@ Global
 		{D9C874D3-B426-48EF-8B0A-6E4E70D0FAB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9C874D3-B426-48EF-8B0A-6E4E70D0FAB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9C874D3-B426-48EF-8B0A-6E4E70D0FAB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4880E99E-E15E-43AB-B883-F172C3E0638B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4880E99E-E15E-43AB-B883-F172C3E0638B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4880E99E-E15E-43AB-B883-F172C3E0638B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4880E99E-E15E-43AB-B883-F172C3E0638B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF4411FD-373A-4FBA-81AC-E9626D6854E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF4411FD-373A-4FBA-81AC-E9626D6854E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF4411FD-373A-4FBA-81AC-E9626D6854E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF4411FD-373A-4FBA-81AC-E9626D6854E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
