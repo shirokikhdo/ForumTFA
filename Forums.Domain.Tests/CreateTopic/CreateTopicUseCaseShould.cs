@@ -6,32 +6,37 @@ using Moq.Language.Flow;
 using Forums.Domain.Authentication;
 using Forums.Domain.Authorization;
 using Forums.Domain.Exceptions;
+using Forums.Domain.Models;
+using Forums.Domain.UseCases.GetForums;
 using Forums.Domain.UseCases.CreateTopic;
 using Topic = Forums.Domain.Models.Topic;
 
-namespace Forums.Domain.Tests;
+namespace Forums.Domain.Tests.CreateTopic;
 
 public class CreateTopicUseCaseShould
 {
     private readonly CreateTopicUseCase _sut;
     private readonly Mock<ICreateTopicStorage> _storage;
-    private readonly ISetup<ICreateTopicStorage, Task<bool>> _forumExistsSetup;
     private readonly ISetup<ICreateTopicStorage, Task<Topic>> _createTopicSetup;
     private readonly ISetup<IIdentity, Guid> _getCurrentUserIdSetup;
     private readonly ISetup<IIntentionManager, bool> _intentionIsAllowedSetup;
     private readonly Mock<IIntentionManager> _intentionManager;
+    private readonly Mock<IGetForumsStorage> _getForumsStorage;
+    private readonly ISetup<IGetForumsStorage, Task<IEnumerable<Forum>>> _getForumsSetup;
 
     public CreateTopicUseCaseShould()
     {
         _storage = new Mock<ICreateTopicStorage>();
-        _forumExistsSetup = _storage.Setup(s => s.ForumExists(
-            It.IsAny<Guid>(), 
-            It.IsAny<CancellationToken>()));
+        
         _createTopicSetup = _storage.Setup(s => s.CreateTopic(
-            It.IsAny<Guid>(), 
-            It.IsAny<Guid>(), 
-            It.IsAny<string>(), 
+            It.IsAny<Guid>(),
+            It.IsAny<Guid>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()));
+
+        _getForumsStorage = new Mock<IGetForumsStorage>();
+        _getForumsSetup = _getForumsStorage.Setup(s => 
+            s.GetForums(It.IsAny<CancellationToken>()));
 
         var identity = new Mock<IIdentity>();
         var identityProvider = new Mock<IIdentityProvider>();
@@ -39,15 +44,19 @@ public class CreateTopicUseCaseShould
         _getCurrentUserIdSetup = identity.Setup(s => s.UserId);
 
         _intentionManager = new Mock<IIntentionManager>();
-        _intentionIsAllowedSetup = _intentionManager.Setup(m => 
+        _intentionIsAllowedSetup = _intentionManager.Setup(m =>
             m.IsAllowed(It.IsAny<TopicIntention>()));
 
         var validator = new Mock<IValidator<CreateTopicCommand>>();
-        validator.Setup(v => 
+        validator.Setup(v =>
                 v.ValidateAsync(It.IsAny<CreateTopicCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
-        
-        _sut = new CreateTopicUseCase(validator.Object, _intentionManager.Object, identityProvider.Object, _storage.Object);
+
+        _sut = new(validator.Object, 
+            _intentionManager.Object, 
+            identityProvider.Object, 
+            _getForumsStorage.Object,
+            _storage.Object);
     }
 
     [Fact]
@@ -61,8 +70,8 @@ public class CreateTopicUseCaseShould
 
         await _sut.Invoking(s => s.Execute(command, CancellationToken.None))
             .Should().ThrowAsync<IntentionManagerException>();
-        
-        _intentionManager.Verify(m => 
+
+        _intentionManager.Verify(m =>
             m.IsAllowed(TopicIntention.Create));
     }
 
@@ -70,17 +79,14 @@ public class CreateTopicUseCaseShould
     public async Task ThrowForumNotFoundException_WhenNoMatchingForum()
     {
         var forumId = Guid.Parse("5E1DCF96-E8F3-41C9-BD59-6479140933B3");
-        
+
         _intentionIsAllowedSetup.Returns(true);
-        _forumExistsSetup.ReturnsAsync(false);
+        _getForumsSetup.ReturnsAsync(Array.Empty<Forum>());
 
         var command = new CreateTopicCommand(forumId, "Some title");
 
         await _sut.Invoking(s => s.Execute(command, CancellationToken.None))
             .Should().ThrowAsync<ForumNotFoundException>();
-        
-        _storage.Verify(s => 
-            s.ForumExists(forumId, It.IsAny<CancellationToken>()));
     }
 
     [Fact]
@@ -90,9 +96,9 @@ public class CreateTopicUseCaseShould
         var userId = Guid.Parse("91B714CC-BDFF-47A1-A6DC-E71DDE8C25F7");
 
         _intentionIsAllowedSetup.Returns(true);
-        _forumExistsSetup.ReturnsAsync(true);
+        _getForumsSetup.ReturnsAsync(new Forum[] { new() { Id = forumId } });
         _getCurrentUserIdSetup.Returns(userId);
-        
+
         var expected = new Topic();
         _createTopicSetup.ReturnsAsync(expected);
 
@@ -101,7 +107,7 @@ public class CreateTopicUseCaseShould
         var actual = await _sut.Execute(command, CancellationToken.None);
         actual.Should().Be(expected);
 
-        _storage.Verify(s => 
+        _storage.Verify(s =>
             s.CreateTopic(forumId, userId, "Hello world", It.IsAny<CancellationToken>()), Times.Once);
     }
 }

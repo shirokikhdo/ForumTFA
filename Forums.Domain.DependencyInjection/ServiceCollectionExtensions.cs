@@ -5,6 +5,7 @@ using Forums.Domain.Authorization;
 using Forums.Domain.Models;
 using Forums.Domain.UseCases.CreateTopic;
 using Forums.Domain.UseCases.GetForums;
+using Forums.Domain.UseCases.GetTopics;
 
 namespace Forums.Domain.DependencyInjection;
 
@@ -15,6 +16,7 @@ public static class ServiceCollectionExtensions
         services
             .AddScoped<IGetForumsUseCase, GetForumsUseCase>()
             .AddScoped<ICreateTopicUseCase, CreateTopicUseCase>()
+            .AddScoped<IGetTopicsUseCase, GetTopicsUseCase>()
             .AddScoped<IIntentionResolver, TopicIntentionResolver>();
 
         services
@@ -22,6 +24,8 @@ public static class ServiceCollectionExtensions
             .AddScoped<IIdentityProvider, IdentityProvider>();
 
         services.AddValidatorsFromAssemblyContaining<Forum>(includeInternalTypes: true);
+
+        services.AddMemoryCache();
 
         return services;
     }

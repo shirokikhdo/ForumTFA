@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Storages\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Forums.Domain\Forums.Domain.csproj" />
   </ItemGroup>
 
