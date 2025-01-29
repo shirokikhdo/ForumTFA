@@ -3,6 +3,7 @@ using Serilog.Filters;
 using Forums.API.Middlewares;
 using Forums.Domain.DependencyInjection;
 using Forums.Storage.DependencyInjection;
+using Forums.API.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddLogging(b => b.AddSerilog(new LoggerConfiguration()
 builder.Services
     .AddForumDomain()
     .AddForumStorage(connectionString);
+builder.Services.AddAutoMapper(config => config.AddProfile<ApiProfile>());
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -35,3 +37,8 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.Run();
+
+public partial class Program
+{
+
+}

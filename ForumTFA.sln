@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решен
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forums.E2E", "Forums.E2E\Forums.E2E.csproj", "{BF0CFD91-5285-4505-84E1-3B790D2A4B3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{AF4411FD-373A-4FBA-81AC-E9626D6854E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF4411FD-373A-4FBA-81AC-E9626D6854E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF4411FD-373A-4FBA-81AC-E9626D6854E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF0CFD91-5285-4505-84E1-3B790D2A4B3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF0CFD91-5285-4505-84E1-3B790D2A4B3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF0CFD91-5285-4505-84E1-3B790D2A4B3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF0CFD91-5285-4505-84E1-3B790D2A4B3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
