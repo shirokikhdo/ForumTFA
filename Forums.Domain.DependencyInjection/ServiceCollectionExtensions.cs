@@ -7,6 +7,8 @@ using Forums.Domain.UseCases.CreateForum;
 using Forums.Domain.UseCases.CreateTopic;
 using Forums.Domain.UseCases.GetForums;
 using Forums.Domain.UseCases.GetTopics;
+using Forums.Domain.UseCases.SignIn;
+using Forums.Domain.UseCases.SignOn;
 
 namespace Forums.Domain.DependencyInjection;
 
@@ -20,11 +22,17 @@ public static class ServiceCollectionExtensions
             .AddScoped<IGetForumsUseCase, GetForumsUseCase>()
             .AddScoped<ICreateTopicUseCase, CreateTopicUseCase>()
             .AddScoped<IGetTopicsUseCase, GetTopicsUseCase>()
+            .AddScoped<ISignOnUseCase, SignOnUseCase>()
+            .AddScoped<ISignInUseCase, SignInUseCase>()
             .AddScoped<IIntentionResolver, TopicIntentionResolver>();
 
         services
             .AddScoped<IIntentionManager, IntentionManager>()
-            .AddScoped<IIdentityProvider, IdentityProvider>();
+            .AddScoped<IIdentityProvider, IdentityProvider>()
+            .AddScoped<IPasswordManager, PasswordManager>()
+            .AddScoped<IAuthenticationService, AuthenticationService>()
+            .AddScoped<ISymmetricDecryptor, AesSymmetricEncryptorDecryptor>()
+            .AddScoped<ISymmetricEncryptor, AesSymmetricEncryptorDecryptor>();
 
         services.AddValidatorsFromAssemblyContaining<Forum>(includeInternalTypes: true);
 

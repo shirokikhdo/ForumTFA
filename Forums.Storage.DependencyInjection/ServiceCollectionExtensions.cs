@@ -3,6 +3,8 @@ using Forums.Domain.UseCases.CreateForum;
 using Forums.Domain.UseCases.CreateTopic;
 using Forums.Domain.UseCases.GetForums;
 using Forums.Domain.UseCases.GetTopics;
+using Forums.Domain.UseCases.SignIn;
+using Forums.Domain.UseCases.SignOn;
 using Forums.Storage.Models;
 using Forums.Storage.Storages;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +21,8 @@ public static class ServiceCollectionExtensions
             .AddScoped<IGetForumsStorage, GetForumsStorage>()
             .AddScoped<ICreateTopicStorage, CreateTopicStorage>()
             .AddScoped<IGetTopicsStorage, GetTopicsStorage>()
+            .AddScoped<ISignOnStorage, SignOnStorage>()
+            .AddScoped<ISignInStorage, SignInStorage>()
             .AddScoped<IGuidFactory, GuidFactory>()
             .AddScoped<IMomentProvider, MomentProvider>()
             .AddDbContextPool<ForumDbContext>(options => options

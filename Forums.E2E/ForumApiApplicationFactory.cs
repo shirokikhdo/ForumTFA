@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
+using System.Security.Cryptography;
 using Testcontainers.PostgreSql;
 
 namespace Forums.E2E;
@@ -23,6 +23,7 @@ public class ForumApiApplicationFactory : WebApplicationFactory<Program>, IAsync
             .AddInMemoryCollection(new Dictionary<string, string>
             {
                 ["ConnectionStrings:PostgresConnectionString"] = _dbContainer.GetConnectionString(),
+                ["Authentication:Base64Key"] = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)),
             })
             .Build();
         builder.UseConfiguration(configuration);

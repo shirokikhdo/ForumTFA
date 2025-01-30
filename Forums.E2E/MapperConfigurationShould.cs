@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Forums.E2E;
 
-public class MapperConfigurationShould : IClassFixture<ForumApiApplicationFactory>
+public class MapperConfigurationShould : IClassFixture<WebApplicationFactory<Program>>
 {
-    private readonly ForumApiApplicationFactory _factory;
+    private readonly WebApplicationFactory<Program> _factory;
 
     public MapperConfigurationShould(
-        ForumApiApplicationFactory factory)
+        WebApplicationFactory<Program> factory)
     {
         _factory = factory;
     }

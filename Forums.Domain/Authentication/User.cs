@@ -1,8 +1,11 @@
 ﻿namespace Forums.Domain.Authentication;
 
-internal class User : IIdentity
+public class User : IIdentity
 {
     public Guid UserId { get; }
+
+    public static User Guest => 
+        new User(Guid.Empty);
 
     public User(Guid userId)
     {
