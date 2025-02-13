@@ -28,4 +28,10 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="GetForums\" />
+    <Folder Include="SignOn\" />
+    <Folder Include="SignOut\" />
+  </ItemGroup>
+
 </Project>

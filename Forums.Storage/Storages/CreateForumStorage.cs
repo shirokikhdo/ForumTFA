@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Forums.Domain.UseCases.CreateForum;
+using Forums.Storage.Entities;
 using Forums.Storage.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;

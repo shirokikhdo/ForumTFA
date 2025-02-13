@@ -9,6 +9,8 @@ using Forums.Domain.UseCases.GetForums;
 using Forums.Domain.UseCases.GetTopics;
 using Forums.Domain.UseCases.SignIn;
 using Forums.Domain.UseCases.SignOn;
+using Forums.Domain.UseCases.SignOut;
+using Forums.Domain.Monitoring;
 
 namespace Forums.Domain.DependencyInjection;
 
@@ -24,6 +26,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IGetTopicsUseCase, GetTopicsUseCase>()
             .AddScoped<ISignOnUseCase, SignOnUseCase>()
             .AddScoped<ISignInUseCase, SignInUseCase>()
+            .AddScoped<ISignOutUseCase, SignOutUseCase>()
             .AddScoped<IIntentionResolver, TopicIntentionResolver>();
 
         services
@@ -35,6 +38,8 @@ public static class ServiceCollectionExtensions
             .AddScoped<ISymmetricEncryptor, AesSymmetricEncryptorDecryptor>();
 
         services.AddValidatorsFromAssemblyContaining<Forum>(includeInternalTypes: true);
+
+        services.AddSingleton<DomainMetrics>();
 
         return services;
     }

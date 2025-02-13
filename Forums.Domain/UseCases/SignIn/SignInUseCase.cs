@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using Forums.Domain.Authentication;
+using Forums.Domain.Exceptions;
 using Microsoft.Extensions.Options;
 
 namespace Forums.Domain.UseCases.SignIn;
@@ -34,18 +36,40 @@ internal class SignInUseCase : ISignInUseCase
         var recognisedUser = await _storage.FindUser(command.Login, cancellationToken);
         
         if (recognisedUser is null)
-            throw new Exception();
+            throw new ValidationException(new ValidationFailure[]
+            {
+                new()
+                {
+                    PropertyName = nameof(command.Login),
+                    ErrorCode = ValidationErrorCode.INVALID,
+                    AttemptedValue = command.Login
+                }
+            });
 
         var passwordMatches = _passwordManager.ComparePasswords(
             command.Password, recognisedUser.Salt, recognisedUser.PasswordHash);
         
         if (!passwordMatches)
-            throw new Exception();
+            throw new ValidationException(new ValidationFailure[]
+            {
+                new()
+                {
+                    PropertyName = nameof(command.Password),
+                    ErrorCode = ValidationErrorCode.INVALID,
+                    AttemptedValue = command.Password
+                }
+            });
+
+        var sessionId = await _storage.CreateSession(
+            recognisedUser.UserId, 
+            DateTimeOffset.UtcNow + TimeSpan.FromHours(1), 
+            cancellationToken);
 
         var token = await _encryptor.Encrypt(
-            recognisedUser.UserId.ToString(), 
-            _configuration.Key, cancellationToken);
-        
-        return (new User(recognisedUser.UserId), token);
+            sessionId.ToString(), 
+            _configuration.Key, 
+            cancellationToken);
+
+        return (new User(recognisedUser.UserId, sessionId), token);
     }
 }

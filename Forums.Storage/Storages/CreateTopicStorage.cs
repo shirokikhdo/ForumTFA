@@ -1,4 +1,5 @@
 ﻿using Forums.Domain.UseCases.CreateTopic;
+using Forums.Storage.Entities;
 using Forums.Storage.Models;
 using Microsoft.EntityFrameworkCore;
 

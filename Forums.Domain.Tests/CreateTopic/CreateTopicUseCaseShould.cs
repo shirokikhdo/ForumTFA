@@ -85,8 +85,9 @@ public class CreateTopicUseCaseShould
 
         var command = new CreateTopicCommand(forumId, "Some title");
 
-        await _sut.Invoking(s => s.Execute(command, CancellationToken.None))
-            .Should().ThrowAsync<ForumNotFoundException>();
+        (await _sut.Invoking(s => s.Execute(command, CancellationToken.None))
+                .Should().ThrowAsync<ForumNotFoundException>())
+            .Which.DomainErrorCode.Should().Be(DomainErrorCode.Gone);
     }
 
     [Fact]

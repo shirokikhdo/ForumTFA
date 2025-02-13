@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Forums.Storage.Entities;
 
 namespace Forums.Storage.Mapping;
 

@@ -2,16 +2,18 @@ using Forums.API.Middlewares;
 using Forums.Domain.DependencyInjection;
 using Forums.Storage.DependencyInjection;
 using Forums.API.Authentication;
-using Forums.API.DependencyInjection;
 using Forums.Domain.Authentication;
 using System.Reflection;
+using Forums.API.Monitoring;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration
     .GetConnectionString("PostgresConnectionString");
 
-builder.Services.AddApiLogging(builder.Configuration, builder.Environment);
+builder.Services
+    .AddApiLogging(builder.Configuration, builder.Environment)
+    .AddApiMetrics();
 builder.Services.Configure<AuthenticationConfiguration>(builder.Configuration.GetSection("Authentication").Bind);
 builder.Services.AddScoped<IAuthTokenStorage, AuthTokenStorage>();
 
@@ -29,7 +31,10 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseAuthorization();
 app.MapControllers();
-app.UseMiddleware<ErrorHandlingMiddleware>();
+app.MapPrometheusScrapingEndpoint();
+app
+    .UseMiddleware<ErrorHandlingMiddleware>()
+    .UseMiddleware<AuthenticationMiddleware>();
 app.Run();
 
 public partial class Program

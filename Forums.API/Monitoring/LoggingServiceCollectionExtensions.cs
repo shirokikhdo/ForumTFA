@@ -1,7 +1,7 @@
 ﻿using Serilog;
 using Serilog.Filters;
 
-namespace Forums.API.DependencyInjection;
+namespace Forums.API.Monitoring;
 
 internal static class LoggingServiceCollectionExtensions
 {

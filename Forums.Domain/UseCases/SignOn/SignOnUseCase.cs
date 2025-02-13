@@ -27,6 +27,6 @@ internal class SignOnUseCase : ISignOnUseCase
 
         var userId = await _storage.CreateUser(command.Login, salt, hash, cancellationToken);
 
-        return new User(userId);
+        return new User(userId, Guid.Empty);
     }
 }

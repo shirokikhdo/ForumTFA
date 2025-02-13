@@ -1,19 +1,15 @@
 ﻿using Forums.Domain.Authentication;
 using System.Security.Cryptography;
 using FluentAssertions;
-using Xunit.Abstractions;
 
 namespace Forums.Domain.Tests.Authentication;
 
 public class AesSymmetricEncryptorDecryptorShould
 {
-    private readonly ITestOutputHelper _testOutputHelper;
     private readonly AesSymmetricEncryptorDecryptor _sut;
 
-    public AesSymmetricEncryptorDecryptorShould(
-        ITestOutputHelper testOutputHelper)
+    public AesSymmetricEncryptorDecryptorShould()
     {
-        _testOutputHelper = testOutputHelper;
         _sut = new AesSymmetricEncryptorDecryptor();
     }
 

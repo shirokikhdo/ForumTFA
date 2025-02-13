@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace Forums.Storage;
+namespace Forums.Storage.Entities;
 
 public class User
 {
@@ -22,4 +22,7 @@ public class User
 
     [InverseProperty(nameof(Comment.Author))]
     public ICollection<Comment> Comments { get; set; }
+
+    [InverseProperty(nameof(Session.User))]
+    public ICollection<Session> Sessions { get; set; }
 }

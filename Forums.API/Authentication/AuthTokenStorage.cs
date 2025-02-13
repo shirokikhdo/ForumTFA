@@ -6,10 +6,10 @@ internal class AuthTokenStorage : IAuthTokenStorage
 
     public bool TryExtract(HttpContext httpContext, out string token)
     {
-        if (httpContext.Request.Headers.TryGetValue(HEADER_KEY, out var values) &&
-            !string.IsNullOrWhiteSpace(values.FirstOrDefault()))
+        if (httpContext.Request.Cookies.TryGetValue(HEADER_KEY, out var value) 
+            && !string.IsNullOrWhiteSpace(value))
         {
-            token = values.First();
+            token = value;
             return true;
         }
         token = string.Empty;
@@ -17,5 +17,5 @@ internal class AuthTokenStorage : IAuthTokenStorage
     }
 
     public void Store(HttpContext httpContext, string token) =>
-        httpContext.Response.Headers[HEADER_KEY] = token;
+        httpContext.Response.Cookies.Append(HEADER_KEY, token);
 }

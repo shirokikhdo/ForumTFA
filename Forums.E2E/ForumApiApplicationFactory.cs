@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography;
+using Microsoft.Extensions.Logging;
 using Testcontainers.PostgreSql;
 
 namespace Forums.E2E;
@@ -27,6 +28,7 @@ public class ForumApiApplicationFactory : WebApplicationFactory<Program>, IAsync
             })
             .Build();
         builder.UseConfiguration(configuration);
+        builder.ConfigureLogging(cfg => cfg.ClearProviders());
         base.ConfigureWebHost(builder);
     }
 
