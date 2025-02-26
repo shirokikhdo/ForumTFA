@@ -1,6 +1,10 @@
 ﻿using System.Net.Http.Json;
 using FluentAssertions;
+using Forums.API.Models;
 using Forums.Domain.Authentication;
+using Forums.Storage;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Forums.E2E;
 
@@ -36,5 +40,19 @@ public class AccountEndpointsShould : IClassFixture<ForumApiApplicationFactory>
             JsonContent.Create(new { title = "Test title" }));
 
         createForumResponse.IsSuccessStatusCode.Should().BeTrue();
+
+        var forum = (await createForumResponse.Content.ReadFromJsonAsync<Forum>())!;
+
+        var createTopicResponse = await httpClient.PostAsync(
+            $"forums/{forum.Id}/topics", 
+            JsonContent.Create(new { title = "New topic" }));
+        createTopicResponse.IsSuccessStatusCode.Should().BeTrue();
+
+        await using var scope = _factory.Services.CreateAsyncScope();
+        var domainEvents = await scope.ServiceProvider
+            .GetRequiredService<ForumDbContext>()
+            .DomainEvents
+            .ToArrayAsync();
+        domainEvents.Should().HaveCount(1);
     }
 }

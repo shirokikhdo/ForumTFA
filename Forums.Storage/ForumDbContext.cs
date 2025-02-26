@@ -15,6 +15,8 @@ public class ForumDbContext : DbContext
 
     public DbSet<Session> Sessions { get; set; }
 
+    public DbSet<DomainEvent> DomainEvents { get; set; }
+
     public ForumDbContext(DbContextOptions<ForumDbContext> options) 
         : base(options)
     {

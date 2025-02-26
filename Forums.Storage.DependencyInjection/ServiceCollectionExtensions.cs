@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Forums.Domain.Authentication;
+using Forums.Domain.UseCases;
 using Forums.Domain.UseCases.CreateForum;
 using Forums.Domain.UseCases.CreateTopic;
 using Forums.Domain.UseCases.GetForums;
@@ -19,6 +20,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddForumStorage(this IServiceCollection services, string dbConnectionString)
     {
         services
+            .AddScoped<IDomainEventStorage, DomainEventStorage>()
             .AddScoped<IAuthenticationStorage, AuthenticationStorage>()
             .AddScoped<ICreateForumStorage, CreateForumStorage>()
             .AddScoped<IGetForumsStorage, GetForumsStorage>()
@@ -31,6 +33,8 @@ public static class ServiceCollectionExtensions
             .AddScoped<IMomentProvider, MomentProvider>()
             .AddDbContextPool<ForumDbContext>(options => options
                 .UseNpgsql(dbConnectionString));
+
+        services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
         services.AddMemoryCache();
 
