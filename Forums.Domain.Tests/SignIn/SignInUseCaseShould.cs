@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using FluentValidation;
-using FluentValidation.Results;
 using Forums.Domain.Authentication;
 using Forums.Domain.UseCases.SignIn;
 using Microsoft.Extensions.Options;
@@ -21,11 +20,6 @@ public class SignInUseCaseShould
 
     public SignInUseCaseShould()
     {
-        var validator = new Mock<IValidator<SignInCommand>>();
-        validator
-            .Setup(v => v.ValidateAsync(It.IsAny<SignInCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ValidationResult());
-
         _storage = new Mock<ISignInStorage>();
         _findUserSetup = _storage.Setup(s => s.FindUser(
             It.IsAny<string>(), 
@@ -55,7 +49,6 @@ public class SignInUseCaseShould
             });
 
         _sut = new SignInUseCase(
-            validator.Object,
             _storage.Object,
             passwordManager.Object,
             _encryptor.Object,
@@ -66,7 +59,8 @@ public class SignInUseCaseShould
     public async Task ThrowValidationException_WhenUserNotFound()
     {
         _findUserSetup.ReturnsAsync(() => null);
-        (await _sut.Invoking(s => s.Execute(new SignInCommand("Test", "qwerty"), CancellationToken.None))
+        var command = new SignInCommand("Test", "qwerty");
+        (await _sut.Invoking(s => s.Handle(command, CancellationToken.None))
                 .Should().ThrowAsync<ValidationException>())
             .Which.Errors.Should().Contain(e => e.PropertyName == "Login");
     }
@@ -76,7 +70,8 @@ public class SignInUseCaseShould
     {
         _findUserSetup.ReturnsAsync(new RecognisedUser());
         _comparePasswordsSetup.Returns(false);
-        (await _sut.Invoking(s => s.Execute(new SignInCommand("Test", "qwerty"), CancellationToken.None))
+        var command = new SignInCommand("Test", "qwerty");
+        (await _sut.Invoking(s => s.Handle(command, CancellationToken.None))
                 .Should().ThrowAsync<ValidationException>())
             .Which.Errors.Should().Contain(e => e.PropertyName == "Password");
     }
@@ -90,7 +85,8 @@ public class SignInUseCaseShould
         _comparePasswordsSetup.Returns(true);
         _createSessionSetup.ReturnsAsync(sessionId);
 
-        await _sut.Execute(new SignInCommand("Test", "qwerty"), CancellationToken.None);
+        var command = new SignInCommand("Test", "qwerty");
+        await _sut.Handle(command, CancellationToken.None);
 
         _storage.Verify(s => s.CreateSession(
             userId, 
@@ -113,7 +109,8 @@ public class SignInUseCaseShould
         _createSessionSetup.ReturnsAsync(sessionId);
         _encryptSetup.ReturnsAsync("token");
 
-        var (identity, token) = await _sut.Execute(new SignInCommand("Test", "qwerty"), CancellationToken.None);
+        var command = new SignInCommand("Test", "qwerty");
+        var (identity, token) = await _sut.Handle(command, CancellationToken.None);
 
         token.Should().NotBeEmpty();
         identity.UserId.Should().Be(userId);
@@ -130,7 +127,8 @@ public class SignInUseCaseShould
         _comparePasswordsSetup.Returns(true);
         _createSessionSetup.ReturnsAsync(sessionId);
 
-        await _sut.Execute(new SignInCommand("Test", "qwerty"), CancellationToken.None);
+        var command = new SignInCommand("Test", "qwerty");
+        await _sut.Handle(command, CancellationToken.None);
 
         _encryptor.Verify(s => s.Encrypt(
             "1d5fd923-583d-4f1b-a305-7e2e1a6cfd54", 

@@ -1,38 +1,32 @@
-﻿using FluentValidation;
-using Forums.Domain.Authentication;
+﻿using Forums.Domain.Authentication;
 using Forums.Domain.Authorization;
-using Forums.Domain.Exceptions;
+using Forums.Domain.Models;
 using Forums.Domain.UseCases.GetForums;
-using Topic = Forums.Domain.Models.Topic;
+using MediatR;
 
 namespace Forums.Domain.UseCases.CreateTopic;
 
-internal class CreateTopicUseCase : ICreateTopicUseCase
+internal class CreateTopicUseCase : IRequestHandler<CreateTopicCommand, Topic>
 {
-    private readonly IValidator<CreateTopicCommand> _validator;
     private readonly IIntentionManager _intentionManager;
     private readonly IIdentityProvider _identityProvider;
     private readonly IGetForumsStorage _getForumsStorage;
     private readonly ICreateTopicStorage _storage;
 
     public CreateTopicUseCase(
-        IValidator<CreateTopicCommand> validator,
         IIntentionManager intentionManager,
         IIdentityProvider identityProvider,
         IGetForumsStorage getForumsStorage,
         ICreateTopicStorage storage)
     {
-        _validator = validator;
         _intentionManager = intentionManager;
         _identityProvider = identityProvider;
         _getForumsStorage = getForumsStorage;
         _storage = storage;
     }
 
-    public async Task<Topic> Execute(CreateTopicCommand command, CancellationToken cancellationToken)
+    public async Task<Topic> Handle(CreateTopicCommand command, CancellationToken cancellationToken)
     {
-        await _validator.ValidateAndThrowAsync(command, cancellationToken);
-        
         var (forumId, title) = command;
 
         _intentionManager.ThrowIfForbidden(TopicIntention.Create);

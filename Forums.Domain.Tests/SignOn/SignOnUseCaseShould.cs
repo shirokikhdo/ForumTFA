@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using FluentValidation;
-using FluentValidation.Results;
 using Forums.Domain.Authentication;
 using Forums.Domain.UseCases.SignOn;
 using Moq;
@@ -17,13 +15,6 @@ public class SignOnUseCaseShould
 
     public SignOnUseCaseShould()
     {
-        var validator = new Mock<IValidator<SignOnCommand>>();
-        validator
-            .Setup(v => v.ValidateAsync(
-                It.IsAny<SignOnCommand>(), 
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ValidationResult());
-
         var passwordManager = new Mock<IPasswordManager>();
         _generatePasswordPartsSetup = passwordManager.Setup(m => 
             m.GeneratePasswordParts(It.IsAny<string>()));
@@ -35,7 +26,7 @@ public class SignOnUseCaseShould
             It.IsAny<byte[]>(), 
             It.IsAny<CancellationToken>()));
 
-        _sut = new SignOnUseCase(validator.Object, passwordManager.Object, _storage.Object);
+        _sut = new SignOnUseCase(passwordManager.Object, _storage.Object);
     }
 
     [Fact]
@@ -45,7 +36,8 @@ public class SignOnUseCaseShould
         var hash = new byte[] { 2 };
         _generatePasswordPartsSetup.Returns((Salt: salt, Hash: hash));
 
-        await _sut.Execute(new SignOnCommand("Test", "qwerty"), CancellationToken.None);
+        var command = new SignOnCommand("Test", "qwerty");
+        await _sut.Handle(command, CancellationToken.None);
 
         _storage.Verify(s => s.CreateUser(
             "Test",
@@ -63,7 +55,7 @@ public class SignOnUseCaseShould
         _createUserSetup.ReturnsAsync(Guid.Parse("7483221E-FE0E-44EE-85B6-94D5279A8988"));
 
         var command = new SignOnCommand("Test", "qwerty");
-        var actual = await _sut.Execute(command, CancellationToken.None);
+        var actual = await _sut.Handle(command, CancellationToken.None);
 
         actual.UserId.Should().Be(Guid.Parse("7483221E-FE0E-44EE-85B6-94D5279A8988"));
     }

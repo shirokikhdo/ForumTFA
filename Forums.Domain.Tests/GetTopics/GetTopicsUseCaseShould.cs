@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using FluentValidation;
-using FluentValidation.Results;
 using Moq;
 using Moq.Language.Flow;
 using Forums.Domain.Exceptions;
@@ -19,11 +17,6 @@ public class GetTopicsUseCaseShould
 
     public GetTopicsUseCaseShould()
     {
-        var validator = new Mock<IValidator<GetTopicsQuery>>();
-        validator
-            .Setup(v => v.ValidateAsync(It.IsAny<GetTopicsQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ValidationResult());
-
         var getForumsStorage = new Mock<IGetForumsStorage>();
         _getForumsSetup = getForumsStorage.Setup(s => s.GetForums(It.IsAny<CancellationToken>()));
         
@@ -31,7 +24,7 @@ public class GetTopicsUseCaseShould
         _getTopicsSetup = _storage.Setup(s =>
             s.GetTopics(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()));
 
-        _sut = new GetTopicsUseCase(validator.Object, getForumsStorage.Object, _storage.Object);
+        _sut = new GetTopicsUseCase(getForumsStorage.Object, _storage.Object);
     }
 
     [Fact]
@@ -41,7 +34,7 @@ public class GetTopicsUseCaseShould
         _getForumsSetup.ReturnsAsync(new Forum[] { new() { Id = Guid.Parse("01B1C554-184B-4B32-913E-F7031AAD3BAC") } });
         var query = new GetTopicsQuery(forumId, 0, 1);
         
-        await _sut.Invoking(s => s.Execute(query, CancellationToken.None))
+        await _sut.Invoking(s => s.Handle(query, CancellationToken.None))
             .Should().ThrowAsync<ForumNotFoundException>();
     }
     [Fact]
@@ -52,9 +45,10 @@ public class GetTopicsUseCaseShould
         var expectedResources = new Topic[] { new() };
         var expectedTotalCount = 6;
         _getTopicsSetup.ReturnsAsync((expectedResources, expectedTotalCount));
-        
-        var (actualResources, actualTotalCount) = await _sut.Execute(
-            new GetTopicsQuery(forumId, 5, 10), CancellationToken.None);
+
+        var query = new GetTopicsQuery(forumId, 5, 10);
+        var (actualResources, actualTotalCount) = await _sut.Handle(
+            query, CancellationToken.None);
         
         actualResources.Should().BeEquivalentTo(expectedResources);
         actualTotalCount.Should().Be(expectedTotalCount);

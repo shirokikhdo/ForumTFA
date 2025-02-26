@@ -17,14 +17,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forums.Storage.DependencyIn
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{7F996468-49F0-4C2C-AB12-375AF6EF0D99}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
 		directory.build.props = directory.build.props
 		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
+		loki-config.yml = loki-config.yml
 		‎prometheus.yml = ‎prometheus.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forums.E2E", "Forums.E2E\Forums.E2E.csproj", "{BF0CFD91-5285-4505-84E1-3B790D2A4B3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forums.Storage.Tests", "Forums.Storage.Tests\Forums.Storage.Tests.csproj", "{A2950C37-5993-4E2D-BA16-AC9088400D3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forums.Storage.Tests", "Forums.Storage.Tests\Forums.Storage.Tests.csproj", "{A2950C37-5993-4E2D-BA16-AC9088400D3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

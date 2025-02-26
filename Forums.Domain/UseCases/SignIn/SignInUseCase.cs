@@ -2,37 +2,34 @@
 using FluentValidation.Results;
 using Forums.Domain.Authentication;
 using Forums.Domain.Exceptions;
+using MediatR;
 using Microsoft.Extensions.Options;
 
 namespace Forums.Domain.UseCases.SignIn;
 
-internal class SignInUseCase : ISignInUseCase
+internal class SignInUseCase 
+    : IRequestHandler<SignInCommand, (IIdentity identity, string token)>
 {
-    private readonly IValidator<SignInCommand> _validator;
     private readonly ISignInStorage _storage;
     private readonly IPasswordManager _passwordManager;
     private readonly ISymmetricEncryptor _encryptor;
     private readonly AuthenticationConfiguration _configuration;
 
     public SignInUseCase(
-        IValidator<SignInCommand> validator,
         ISignInStorage storage,
         IPasswordManager passwordManager,
         ISymmetricEncryptor encryptor,
         IOptions<AuthenticationConfiguration> options)
     {
-        _validator = validator;
         _storage = storage;
         _passwordManager = passwordManager;
         _encryptor = encryptor;
         _configuration = options.Value;
     }
 
-    public async Task<(IIdentity identity, string token)> Execute(
+    public async Task<(IIdentity identity, string token)> Handle(
         SignInCommand command, CancellationToken cancellationToken)
     {
-        await _validator.ValidateAndThrowAsync(command, cancellationToken);
-
         var recognisedUser = await _storage.FindUser(command.Login, cancellationToken);
         
         if (recognisedUser is null)

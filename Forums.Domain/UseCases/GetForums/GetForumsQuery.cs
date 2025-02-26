@@ -1,12 +1,13 @@
-﻿using Forums.Domain.Monitoring;
+﻿using Forums.Domain.Models;
+using Forums.Domain.Monitoring;
 using MediatR;
 
-namespace Forums.Domain.UseCases.SignOut;
+namespace Forums.Domain.UseCases.GetForums;
 
-public record SignOutCommand 
-    : IRequest, IMonitoredRequest
+public record GetForumsQuery 
+    : IRequest<IEnumerable<Forum>>, IMonitoredRequest
 {
-    private const string COUNTER_NAME = "account.signedout";
+    private const string COUNTER_NAME = "forums.fetched";
 
     public void MonitorSuccess(DomainMetrics metrics) =>
         metrics.IncrementCount(COUNTER_NAME, 1, DomainMetrics.ResultTags(true));
